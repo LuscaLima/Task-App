@@ -1,0 +1,51 @@
+version: "3.5"
+
+services:
+  apptask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: apptask
+    container_name: apptask
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_USERNAME=$DB_USER
+      - MONGO_PASSWORD=$DB_PASS
+      - MONGO_HOSTNAME=dbtask
+      - MONGO_PORT=$DB_PORT
+      - MONGO_DB=$DB_NAME
+    ports:
+      - $PORT:8080
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - app-network
+    # command: ./wait-for.sh dbtask:27017 -- /home/node/app/node_modules/.bin/nodemon app.js
+    command: npm run dev
+    depends_on:
+      - dbtask
+
+  dbtask:
+    image: mongo:4.4.0-bionic
+    container_name: dbtask
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$DB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$DB_PASS
+      - MONGO_INITDB_DATABASE=$DB_NAME
+    volumes:
+      - ./src/config/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh:ro
+      - dbdata:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+  node_modules:
