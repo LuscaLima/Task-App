@@ -41,6 +41,32 @@ class TaskController implements BaseController {
       res.status(404).send(e)
     }
   }
+
+  public async update(req: Request, res: Response) {
+    const { id } = req.params
+
+    try {
+      const task = await Task.findByIdAndUpdate(id, req.body, {
+        new: true,
+        runValidators: true
+      })
+
+      if (!task) {
+        res.status(404).send()
+        return
+      }
+
+      res.json(task)
+    } catch (e) {
+      res.status(400).send()
+    }
+  }
+
+  isValidUpdate(data: object, keys: Array<string>): boolean {
+    const updates = Object.keys(data)
+
+    return updates.every(update => keys.includes(update))
+  }
 }
 
 export default new TaskController()

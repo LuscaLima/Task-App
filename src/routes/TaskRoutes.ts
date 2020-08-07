@@ -11,4 +11,7 @@ router.get('/', Task.all)
 /** Get one task by ID */
 router.get('/:id', Task.oneById)
 
+/** Update onde task by ID */
+router.put('/:id', Task.update)
+
 export default router

@@ -11,4 +11,7 @@ router.get('/', User.all)
 /** Get one user by ID */
 router.get('/:id', User.oneById)
 
+/** Update onde task by ID */
+router.put('/:id', User.update)
+
 export default router
