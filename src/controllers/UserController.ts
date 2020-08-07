@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import User from '../models/User'
+import BaseController from './BaseController'
 
-class UserController {
+class UserController implements BaseController {
   constructor() {}
 
   public create(req: Request, res: Response) {
