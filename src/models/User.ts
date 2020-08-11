@@ -1,5 +1,6 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
+import bcrypt from 'bcryptjs'
 
 const UserSchema = new Schema({
   name: {
@@ -32,6 +33,21 @@ const UserSchema = new Schema({
       return true
     }
   }
+})
+
+/** To make the 'password' field visible outside the Document instance */
+interface IUserDocument extends Document {
+  password: string
+}
+
+UserSchema.pre<IUserDocument>('save', async function (next): Promise<void> {
+  const user = this // Its better refer this like a user
+
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password, 8)
+  }
+
+  next()
 })
 
 const Users = mongoose.model('Users', UserSchema)
