@@ -95,6 +95,17 @@ class UserController extends BaseController {
       res.status(500).send()
     }
   }
+
+  public async login(req: Request, res: Response) {
+    const { email, password } = req.body
+
+    try {
+      const user = await User.findByCredentials(email, password)
+      res.json(user)
+    } catch (e) {
+      res.status(400).send()
+    }
+  }
 }
 
 export default new UserController()
