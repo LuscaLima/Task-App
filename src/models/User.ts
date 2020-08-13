@@ -37,7 +37,7 @@ const UserSchema: Schema = new Schema({
   }
 })
 
-/** Finda a user by the passing email and password */
+/** Finds a user by email and password*/
 UserSchema.statics.findByCredentials = async (
   email: string,
   password: string
@@ -60,7 +60,6 @@ UserSchema.statics.findByCredentials = async (
 /**
  *  Whenever the 'save' event is triggered,
  *  the password is handled if it exists
- *
  * */
 UserSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   const user = this // Its better refer this like a user
