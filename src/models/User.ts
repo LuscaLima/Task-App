@@ -59,6 +59,7 @@ UserSchema.methods.generateAuthToken = async function (): Promise<string> {
   const token = jwt.sign({ _id: user._id }, process.env.HASH)
 
   user.tokens = [...user.tokens, { token }]
+  // This method already save the token on the instance
   await user.save()
 
   return token
