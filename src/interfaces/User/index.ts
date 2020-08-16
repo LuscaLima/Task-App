@@ -11,7 +11,9 @@ export interface IUserSchema extends Document {
 export interface IUserBase extends IUserSchema {}
 
 /** Interface for user */
-export interface IUser extends IUserBase {}
+export interface IUser extends IUserBase {
+  generateAuthToken(): Promise<string>
+}
 
 /** Interface for user model */
 export interface IUserModel extends Model<IUser> {
