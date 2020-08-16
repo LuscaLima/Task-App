@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { IRequest } from '../interfaces/Middleware'
 import BaseController from './BaseController'
 import User from '../models/User'
 
@@ -22,13 +23,8 @@ class UserController extends BaseController {
     }
   }
 
-  async all(_: Request, res: Response) {
-    try {
-      const users = await User.find({})
-      res.json(users)
-    } catch (e) {
-      res.status(500).send()
-    }
+  async me(req: IRequest, res: Response) {
+    res.json(req.user)
   }
 
   async oneById(req: Request, res: Response) {
