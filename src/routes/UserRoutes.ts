@@ -1,23 +1,24 @@
 import { Router } from 'express'
 const router = Router()
 import User from '../controllers/UserController'
+import { auth } from '../middlewares/auth'
 
 /** Criation route */
 router.post('/', User.create)
 
-/** Get all users */
-router.get('/', User.all)
+/** Get the profile of the current user */
+router.get('/me', auth, User.me)
 
 /** Get one user by ID */
 router.get('/:id', User.oneById)
 
-/** Update one task by ID */
+/** Update one user by ID */
 router.put('/:id', User.update)
 
 /** Delete one user by ID */
 router.delete('/:id', User.delete)
 
-/** Login */
+/** Login route */
 router.post('/login', User.login)
 
 export default router
