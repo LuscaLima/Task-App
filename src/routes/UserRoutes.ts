@@ -21,4 +21,7 @@ router.delete('/:id', User.delete)
 /** Login route */
 router.post('/login', User.login)
 
+/** Logout route */
+router.post('/logout', auth, User.logout)
+
 export default router
