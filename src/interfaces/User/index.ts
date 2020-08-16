@@ -5,6 +5,7 @@ export interface IUserSchema extends Document {
   name: string
   email: string
   password: string
+  tokens: Array<object>
 }
 
 /** Interface for user base */
