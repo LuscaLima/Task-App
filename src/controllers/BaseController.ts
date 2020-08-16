@@ -9,7 +9,7 @@ abstract class BaseController {
   /**
    * all
    */
-  abstract all(_: Request, res: Response): Promise<void>
+  // abstract all(_: Request, res: Response): Promise<void>
 
   /**
    * getById
