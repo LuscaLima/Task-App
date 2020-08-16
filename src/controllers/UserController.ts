@@ -105,6 +105,23 @@ class UserController extends BaseController {
       res.status(400).send()
     }
   }
+
+  public async logout(req: IRequest, res: Response) {
+    try {
+      const user = req.user
+
+      if (!user?.tokens) {
+        throw new Error()
+      }
+
+      user.tokens = user.tokens.filter(token => token.token !== req.token)
+      await user.save()
+
+      res.send()
+    } catch (e) {
+      res.status(500).send()
+    }
+  }
 }
 
 export default new UserController()
