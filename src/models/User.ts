@@ -65,6 +65,16 @@ UserSchema.methods.generateAuthToken = async function (): Promise<string> {
   return token
 }
 
+UserSchema.methods.toJSON = function (): object {
+  const user = this // Its better refer this like a user
+  const userObject = user.toObject()
+
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject
+}
+
 /** Finds a user by email and password*/
 UserSchema.statics.findByCredentials = async (
   email: string,
