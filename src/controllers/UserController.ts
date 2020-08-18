@@ -27,8 +27,7 @@ class UserController extends BaseController {
     res.json(req.user)
   }
 
-  public async update(req: Request, res: Response) {
-    const { id } = req.params
+  public async update(req: IRequest, res: Response) {
     const updates = ['name', 'email', 'password']
 
     if (!super.isValidUpdate(req.body, updates)) {
@@ -38,7 +37,7 @@ class UserController extends BaseController {
     }
 
     try {
-      const user = await User.findById(id)
+      const user = req.user
 
       if (user) {
         updates.forEach(update => {
@@ -46,11 +45,6 @@ class UserController extends BaseController {
         })
 
         await user.save()
-      }
-
-      if (!user) {
-        res.status(404).send()
-        return
       }
 
       res.json(user)
