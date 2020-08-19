@@ -1,10 +1,11 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import { IRequest } from '../interfaces/Middleware'
 import BaseController from './BaseController'
 import Task from '../models/Task'
 
 class TaskController extends BaseController {
-  public async create(req: Request, res: Response): Promise<void> {
-    const task = new Task(req.body)
+  public async create(req: IRequest, res: Response): Promise<void> {
+    const task = new Task({ ...req.body, owner: req.user?._id })
 
     try {
       await task.save()
@@ -14,20 +15,23 @@ class TaskController extends BaseController {
     }
   }
 
-  public async all(_: Request, res: Response): Promise<void> {
+  public async all(req: IRequest, res: Response): Promise<void> {
     try {
-      const tasks = await Task.find({})
-      res.json(tasks)
+      // const tasks = await Task.find({})
+      const user = req.user
+      await user?.populate('tasks').execPopulate()
+
+      res.json(user?.tasks)
     } catch (e) {
       res.status(500).send()
     }
   }
 
-  public async oneById(req: Request, res: Response): Promise<void> {
-    const { id } = req.params
+  public async oneById(req: IRequest, res: Response): Promise<void> {
+    const _id = req.params.id
 
     try {
-      const task = await Task.findById(id)
+      const task = await Task.findOne({ _id, owner: req.user?._id })
 
       if (!task) {
         res.status(404).send()
@@ -40,8 +44,8 @@ class TaskController extends BaseController {
     }
   }
 
-  public async update(req: Request, res: Response): Promise<void> {
-    const { id } = req.params
+  public async update(req: IRequest, res: Response): Promise<void> {
+    const _id = req.params.id
 
     if (!super.isValidUpdate(req.body, ['title', 'description', 'completed'])) {
       res.status(400).json({
@@ -50,10 +54,14 @@ class TaskController extends BaseController {
     }
 
     try {
-      const task = await Task.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true
-      })
+      const task = await Task.findOneAndUpdate(
+        { _id, owner: req.user?._id },
+        req.body,
+        {
+          new: true,
+          runValidators: true
+        }
+      )
 
       if (!task) {
         res.status(404).send()
@@ -66,11 +74,11 @@ class TaskController extends BaseController {
     }
   }
 
-  public async delete(req: Request, res: Response) {
-    const { id } = req.params
+  public async delete(req: IRequest, res: Response) {
+    const _id = req.params.id
 
     try {
-      const task = await Task.findByIdAndDelete(id)
+      const task = await Task.findOneAndDelete({ _id, owner: req.user?._id })
 
       if (!task) {
         res.status(404).send()
