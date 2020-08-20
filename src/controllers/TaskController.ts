@@ -1,5 +1,6 @@
 import { Response } from 'express'
 import { IRequest } from '../interfaces/Middleware'
+import { IFlexObject } from '../interfaces'
 import BaseController from './BaseController'
 import Task from '../models/Task'
 
@@ -17,9 +18,21 @@ class TaskController extends BaseController {
 
   public async all(req: IRequest, res: Response): Promise<void> {
     try {
-      // const tasks = await Task.find({})
+      const { completed } = req.query
+
+      const match: IFlexObject = {}
+
+      if (completed) {
+        match.completed = completed === 'true'
+      }
+
       const user = req.user
-      await user?.populate('tasks').execPopulate()
+      await user
+        ?.populate({
+          path: 'tasks',
+          match
+        })
+        .execPopulate()
 
       res.json(user?.tasks)
     } catch (e) {
