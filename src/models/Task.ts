@@ -1,27 +1,32 @@
 import mongoose, { Schema } from 'mongoose'
 
-const TaskSchema: Schema = new Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
+const taskSchema: Schema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    description: {
+      type: String,
+      trim: true
+    },
+    completed: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
   },
-  description: {
-    type: String,
-    trim: true
-  },
-  completed: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  owner: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
+  {
+    timestamps: true
   }
-})
+)
 
-const Task = mongoose.model('Task', TaskSchema)
+const Task = mongoose.model('Task', taskSchema)
 
 export default Task

@@ -12,47 +12,52 @@ declare const process: {
   }
 }
 
-const userSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    validate(value: string): boolean {
-      if (!isEmail(value)) {
-        throw new Error('Email is invalid')
-      }
+const userSchema: Schema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      validate(value: string): boolean {
+        if (!isEmail(value)) {
+          throw new Error('Email is invalid')
+        }
 
-      return true
-    }
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-    trim: true,
-    validate(value: string): boolean {
-      if (value.toLowerCase().includes('password')) {
-        throw new Error('Password is invalid')
+        return true
       }
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+      trim: true,
+      validate(value: string): boolean {
+        if (value.toLowerCase().includes('password')) {
+          throw new Error('Password is invalid')
+        }
 
-      return true
-    }
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true
+        return true
       }
-    }
-  ]
-})
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
+      }
+    ]
+  },
+  {
+    timestamps: true
+  }
+)
 
 /** Get all tasks related an user */
 userSchema.virtual('tasks', {
