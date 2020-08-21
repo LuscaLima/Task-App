@@ -18,7 +18,8 @@ class TaskController extends BaseController {
 
   public async all(req: IRequest, res: Response): Promise<void> {
     try {
-      const { completed } = req.query
+      /** Filtering and pagination */
+      const { completed, limit, skip } = req.query
 
       const match: IFlexObject = {}
 
@@ -30,7 +31,11 @@ class TaskController extends BaseController {
       await user
         ?.populate({
           path: 'tasks',
-          match
+          match,
+          options: {
+            limit: Math.abs(parseInt(<string>limit)),
+            skip: Math.abs(parseInt(<string>skip))
+          }
         })
         .execPopulate()
 
