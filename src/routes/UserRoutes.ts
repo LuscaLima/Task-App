@@ -2,9 +2,13 @@ import { Router } from 'express'
 const router = Router()
 import User from '../controllers/UserController'
 import { auth } from '../middlewares/auth'
+import { uploadAvatar } from '../middlewares/user'
 
 /** Criation route */
 router.post('/', User.create)
+
+/** Set up an avatar */
+router.post('/me/avatar', auth, uploadAvatar, User.avatar)
 
 /** Get the profile of the current user */
 router.get('/me', auth, User.me)
