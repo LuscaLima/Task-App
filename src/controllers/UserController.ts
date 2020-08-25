@@ -23,7 +23,15 @@ class UserController extends BaseController {
     }
   }
 
-  async avatar(_: Request, res: Response) {
+  async avatar(req: IRequest, res: Response) {
+    const user = req.user
+
+    if (user) {
+      user.avatar = req.file.buffer
+    }
+
+    await user?.save()
+
     res.send()
   }
 
