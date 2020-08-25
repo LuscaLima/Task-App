@@ -11,6 +11,7 @@ export interface IUserSchema extends Document {
   password: string
   tokens: Token[]
   tasks: object[]
+  avatar: Buffer
 }
 
 /** Interface for user base */
