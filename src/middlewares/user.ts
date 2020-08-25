@@ -2,7 +2,6 @@ import multer from 'multer'
 
 /** Basic config of multer */
 const upload = multer({
-  dest: 'avatar',
   limits: {
     fileSize: 500000
   },
