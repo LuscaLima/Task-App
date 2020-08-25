@@ -23,7 +23,7 @@ class UserController extends BaseController {
     }
   }
 
-  async avatar(req: IRequest, res: Response) {
+  async setAvatar(req: IRequest, res: Response) {
     const user = req.user
 
     if (user) {
@@ -35,7 +35,7 @@ class UserController extends BaseController {
     res.send()
   }
 
-  async avatarRemove(req: IRequest, res: Response) {
+  async removeAvatar(req: IRequest, res: Response) {
     const user = req.user
 
     if (user) {
@@ -45,6 +45,23 @@ class UserController extends BaseController {
     await user?.save()
 
     res.send()
+  }
+
+  async getAvatar(req: IRequest, res: Response) {
+    try {
+      const { id } = req.params
+
+      const user = await User.findById(id)
+
+      if (!user || !user.avatar) {
+        throw new Error()
+      }
+
+      res.set('Content-Type', 'image/jpg')
+      res.send(user.avatar)
+    } catch (e) {
+      res.status(404).send()
+    }
   }
 
   async me(req: IRequest, res: Response) {

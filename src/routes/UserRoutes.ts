@@ -8,10 +8,13 @@ import { uploadAvatar } from '../middlewares/user'
 router.post('/', User.create)
 
 /** Set up an avatar */
-router.post('/me/avatar', auth, uploadAvatar, User.avatar)
+router.post('/me/avatar', auth, uploadAvatar, User.setAvatar)
 
 /** Removing the user's avatar */
-router.delete('/me/avatar', auth, User.avatarRemove)
+router.delete('/me/avatar', auth, User.removeAvatar)
+
+/** Get the avatar of an user */
+router.get('/:id/avatar', User.getAvatar)
 
 /** Get the profile of the current user */
 router.get('/me', auth, User.me)
